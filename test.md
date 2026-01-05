@@ -3,10 +3,19 @@
 ## Inline Elements
 
 **Bold**, *italic*, ***bold and italic***, ~~strikethrough~~, `code`
+Ruby/Furigana: {漢字}(かんじ), {東京}(とうきょう)
 
-[Link](https://example.com)
+## Links
 
-Ruby/Furigana: {漢字}(かんじ), {時計}(とけい), {東京}(とうきょう)
+Link: [Link](https://example.com)
+
+## Images
+
+Image:
+![alt text](https://example.com/image.png)
+
+Image with Title:
+-![Screenshot of the interface](https://example.com/interface.png)
 
 ## Headings
 

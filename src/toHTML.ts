@@ -38,6 +38,8 @@ export class HTMLSerializer {
         return `<dd>${node.content}</dd>`;
       case "blockquote":
         return `<blockquote>${node.content}</blockquote>`;
+      case "image_captioned":
+        return `<figure><img src="${node.id}" alt="${node.content}" /><figcaption>${node.content}</figcaption></figure>`;
       case "admonition":
         return this.admonitionToHTML(node);
       case "code":

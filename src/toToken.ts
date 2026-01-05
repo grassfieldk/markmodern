@@ -104,6 +104,19 @@ export class Tokenizer {
         continue;
       }
 
+      // Image with caption: -![title](url)
+      const captionedImageMatch = line.match(/^-!\[([^\]]*)\]\(([^)]+)\)$/);
+      if (captionedImageMatch) {
+        this.tokens.push({
+          type: "image_captioned",
+          content: captionedImageMatch[1], // alt text / title
+          raw: line,
+          id: captionedImageMatch[2], // url stored in id
+        });
+        i++;
+        continue;
+      }
+
 
       // Unordered lists: - or * or [ ] / [x]
       const unorderedMatch = line.match(

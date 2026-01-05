@@ -112,6 +112,9 @@ export class ASTGenerator {
     // Inline code: `text`
     result = result.replace(/`([^`]+)`/g, "<code>$1</code>");
 
+    // Images: ![alt](url)
+    result = result.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" />');
+
     // Links: [text](url)
     result = result.replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2">$1</a>');
 
@@ -168,6 +171,16 @@ export class ASTGenerator {
       }
 
       if (token.type === "blank") {
+        i++;
+        continue;
+      }
+
+      if (token.type === "image_captioned") {
+        ast.push({
+          type: "image_captioned",
+          content: token.content, // alt text / title
+          id: token.id, // url
+        });
         i++;
         continue;
       }
