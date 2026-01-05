@@ -18,14 +18,11 @@ if (!inputFile) {
 let outputFormat = "html";
 if (outputFormatArg === "-t" || outputFormatArg === "--token") {
   outputFormat = "token";
-}
-if (outputFormatArg === "-a" || outputFormatArg === "--ast") {
+} else if (outputFormatArg === "-a" || outputFormatArg === "--ast") {
   outputFormat = "ast";
-}
-if (outputFormatArg === "-h" || outputFormatArg === "--html") {
+} else if (outputFormatArg === "-h" || outputFormatArg === "--html") {
   outputFormat = "html";
-}
-if (outputFormatArg !== undefined) {
+} else if (outputFormatArg !== undefined) {
   console.error(
     "Invalid format. Use: -t|--token, -a|--ast, or -h|--html (default)",
   );
