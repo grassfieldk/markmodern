@@ -38,6 +38,8 @@ export class HTMLSerializer {
         return `<dd>${node.content}</dd>`;
       case "blockquote":
         return `<blockquote>${node.content}</blockquote>`;
+      case "admonition":
+        return this.admonitionToHTML(node);
       case "code":
         return `<pre><code>${this.escapeHTML(node.content || "")}</code></pre>`;
       case "table":
@@ -47,6 +49,14 @@ export class HTMLSerializer {
       default:
         return "";
     }
+  }
+
+  private admonitionToHTML(node: ASTNode): string {
+    const admonType = node.id ?? "note";
+    const admonSubtype = node.headers?.[0] ?? "";
+    const content = node.children?.map((child) => this.nodeToHTML(child)).join("\n") ?? "";
+    const classes = `admonition admonition-${admonType}${admonSubtype ? ` admonition-${admonSubtype}` : ""}`;
+    return `<aside class="${classes}">\n${content}\n</aside>`;
   }
 
   private tableToHTML(node: ASTNode): string {

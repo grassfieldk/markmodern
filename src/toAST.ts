@@ -196,6 +196,24 @@ export class ASTGenerator {
           type: "blockquote",
           content: this.parseInline(token.content ?? ""),
         });
+      } else if (token.type === "admonition") {
+        // Process admonition block content through tokenizer and generator recursively
+        const admonType = token.id ?? "note";
+        const admonKind = token.headers?.[0] ?? "info";
+        const admonContent = token.content ?? "";
+
+        // Recursively tokenize and parse the content inside admonition
+        const tokenizer = new (require("./toToken").Tokenizer)();
+        const innerTokens = tokenizer.tokenize(admonContent);
+        const generator = new ASTGenerator();
+        const innerAST = generator.generate(innerTokens, this.footnotes);
+
+        ast.push({
+          type: "admonition",
+          id: admonType,
+          headers: [admonKind],
+          children: innerAST,
+        });
       } else if (token.type === "horizontal_rule") {
         ast.push({
           type: "hr",

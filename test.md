@@ -98,3 +98,24 @@ This is text[^1].
 \*Escaped asterisk\*
 
 \\Backslash
+
+## Admonitions
+
+:::note info
+Information note. Subtype is optional.
+:::
+
+:::note warn
+This is a warning. Pay attention!
+
+- Item 1
+- Item 2
+:::
+
+:::note alert
+Strong warning. Do not do this!
+:::
+
+:::note
+Basic note without subtype.
+:::

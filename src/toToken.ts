@@ -78,6 +78,33 @@ export class Tokenizer {
         continue;
       }
 
+      // Admonition blocks: :::type [subtype]
+      const admonitionMatch = line.match(/^:::([a-z]+)(?:\s+([a-z]+))?$/);
+      if (admonitionMatch?.[1]) {
+        const admonType = admonitionMatch[1];
+        const admonSubtype = admonitionMatch[2] ?? ""; // Optional subtype
+        let content = "";
+        let j = i + 1;
+
+        // Collect lines until closing :::
+        while (j < lines.length && !lines[j].match(/^:::$/)) {
+          content += lines[j] + "\n";
+          j++;
+        }
+
+        this.tokens.push({
+          type: "admonition",
+          content: content.trim(),
+          raw: line,
+          id: admonType,
+          headers: admonSubtype ? [admonSubtype] : [], // Store subtype if present
+        });
+
+        i = j + 1; // Skip past the closing :::
+        continue;
+      }
+
+
       // Unordered lists: - or * or [ ] / [x]
       const unorderedMatch = line.match(
         /^[\s]*[-*]\s+(?:\[([ xX])\]\s+)?(.+)$/,
