@@ -68,7 +68,7 @@ export class ASTGenerator {
     };
   }
 
-  // Parse inline elements (bold, italic, code, links, strikethrough, footnotes)
+  // Parse inline elements (bold, italic, code, links, strikethrough, footnotes, ruby)
   private parseInline(text: string): string {
     let result = text;
 
@@ -87,6 +87,9 @@ export class ASTGenerator {
       const placeholder = `__FOOTNOTE_${id}__`;
       return placeholder;
     });
+
+    // Ruby/Furigana: {kanji}(kana)
+    result = result.replace(/\{([^}]+)\}\(([^)]+)\)/g, "<ruby>$1<rt>$2</rt></ruby>");
 
     // Bold + Italic: ***text*** or ___text___
     result = result.replace(

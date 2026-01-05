@@ -6,6 +6,8 @@
 
 [Link](https://example.com)
 
+Ruby/Furigana: {漢字}(かんじ), {時計}(とけい), {東京}(とうきょう)
+
 ## Headings
 
 # h1
