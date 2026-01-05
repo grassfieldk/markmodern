@@ -1,0 +1,58 @@
+name: Build and Release Binary
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Build binary
+        run: bun build --compile index.ts --outfile markmodern${{ runner.os == 'Windows' && '.exe' || '' }}
+
+      - name: Create archive (Linux/macOS)
+        if: runner.os != 'Windows'
+        run: zip -j markmodern-${{ runner.os }}-${{ matrix.os }}.zip markmodern
+
+      - name: Create archive (Windows)
+        if: runner.os == 'Windows'
+        run: powershell Compress-Archive -Path markmodern.exe -DestinationPath markmodern-Windows-${{ matrix.os }}.zip
+
+      - name: Upload Release Asset
+        uses: actions/upload-artifact@v4
+        with:
+          name: markmodern-${{ matrix.os }}
+          path: markmodern*.zip
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: '**/markmodern*.zip'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

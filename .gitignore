@@ -6,6 +6,11 @@ out
 dist
 *.tgz
 
+# compiled binaries
+markmodern
+markmodern.exe
+*.zip
+
 # code coverage
 coverage
 *.lcov
