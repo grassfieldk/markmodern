@@ -91,6 +91,7 @@ export class ASTGenerator {
             listItems.push({
               type: "list_item",
               content: this.parseInline(item.content ?? ""),
+              checked: item.checked,
             });
             i++;
           } else {

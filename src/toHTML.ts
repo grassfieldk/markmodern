@@ -13,9 +13,9 @@ export class HTMLSerializer {
       case "paragraph":
         return `<p>${node.content}</p>`;
       case "ul":
-        return `<ul>${node.children?.map((item) => `<li>${item.content}</li>`).join("")}</ul>`;
+        return `<ul>${node.children?.map((item) => this.renderListItem(item)).join("")}</ul>`;
       case "ol":
-        return `<ol>${node.children?.map((item) => `<li>${item.content}</li>`).join("")}</ol>`;
+        return `<ol>${node.children?.map((item) => this.renderListItem(item)).join("")}</ol>`;
       case "blockquote":
         return `<blockquote>${node.content}</blockquote>`;
       case "code":
@@ -56,6 +56,14 @@ export class HTMLSerializer {
       .join("");
 
     return `<table><thead><tr>${headerHTML}</tr></thead><tbody>${rowsHTML}</tbody></table>`;
+  }
+
+  private renderListItem(item: ASTNode): string {
+    if (item.checked !== undefined) {
+      const checkbox = item.checked ? "☑" : "☐";
+      return `<li>${checkbox} ${item.content}</li>`;
+    }
+    return `<li>${item.content}</li>`;
   }
 
   private escapeHTML(text: string): string {

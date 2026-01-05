@@ -62,16 +62,22 @@ export class Tokenizer {
         continue;
       }
 
-      // Unordered lists: - or *
-      const unorderedMatch = line.match(/^[\s]*[-*]\s+(.+)$/);
-      if (unorderedMatch?.[1]) {
+      // Unordered lists: - or * or [ ] / [x]
+      const unorderedMatch = line.match(
+        /^[\s]*[-*]\s+(?:\[([ xX])\]\s+)?(.+)$/,
+      );
+      if (unorderedMatch?.[2]) {
         const indentMatch = line.match(/^(\s*)/);
         const indent = indentMatch?.[1]?.length ?? 0;
+        const checked = unorderedMatch[1]
+          ? unorderedMatch[1].toLowerCase() === "x"
+          : undefined;
         this.tokens.push({
           type: "list_item",
           ordered: false,
           level: Math.floor(indent / 2),
-          content: unorderedMatch[1],
+          content: unorderedMatch[2],
+          checked,
           raw: line,
         });
         i++;

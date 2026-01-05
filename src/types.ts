@@ -8,6 +8,7 @@ export type Token = {
   headers?: string[];
   rows?: string[][];
   alignments?: string[];
+  checked?: boolean;
 };
 
 // AST Node type - Abstract Syntax Tree representation
@@ -20,4 +21,5 @@ export type ASTNode = {
   headers?: string[];
   rows?: string[][];
   alignments?: string[];
+  checked?: boolean;
 };
