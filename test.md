@@ -1,99 +1,98 @@
-# Main Title
+# markmodern Test Document
 
-This is a basic paragraph. It includes **bold** and *italic* text, as well as `inline code`.
+## Inline Elements
 
-[This is a link](https://example.com).
+**Bold**, *italic*, ***bold and italic***, ~~strikethrough~~, `code`
 
-## Level 2 Heading
+[Link](https://example.com)
 
-This follows the paragraph. You can also use __another bold notation__ and _another italic notation_.
+## Headings
 
-### Level 3 Heading
+# h1
+## h2
+### h3
+#### h4
+##### h5
+###### h6
 
-This is normal paragraph text.
+## Lists
 
-#### Level 4 Heading
+### Unordered List
 
-Headings support up to H6.
+- Item 1
+- Item 2
+  - Nested 2-1
+  - Nested 2-2
+    - Nested 3-1
+- Item 3
 
-##### Level 5 Heading
+### Ordered List
 
-Paragraphs can contain various markdown syntax.
+1. First
+2. Second
+   1. Nested 2-1
+   2. Nested 2-2
+3. Third
 
-###### Level 6 Heading
+## Checklist
 
-This is the lowest level heading.
+- [x] Completed task
+- [ ] Incomplete task
+  - [x] Nested completed task
 
----
+## Table
 
-## Unordered Lists
+| Left | Center | Right |
+| :--- | :---: | ---: |
+| A1 | B1 | C1 |
+| A2 | B2 | C2 |
 
-- First item
-- Second item
-- Third item
-  - Nested item
-  - Another nested item
-
-Another way:
-
-* Asterisks work the same
-* Lists can be created
-* These should be consistent
-
----
-
-## Ordered Lists
-
-1. First step
-2. Second step
-3. Third step
-   1. Nested step
-   2. Another nested step
-
----
-
-## Blockquotes
-
-> This is a blockquote.
-> It supports multiple lines.
-
----
-
-## Code Blocks
-
-```typescript
-const greeting = "Hello, Markdown!";
-const num = 42;
-
-function sayHello(name: string): string {
-  return `Hello, ${name}!`;
-}
-
-console.log(sayHello("World"));
-```
-
-JavaScript code example:
+## Code Block
 
 ```javascript
-const arr = [1, 2, 3, 4, 5];
-const doubled = arr.map(x => x * 2);
-console.log(doubled);
+function hello() {
+  console.log("world");
+}
 ```
 
+```python
+def hello():
+    print("world")
+```
+
+## Blockquote
+
+> This is a quote
+> Multiple lines
+>
+> > Nested quote
+
+## Definition List
+
+Markdown
+: A markup language
+: Plain text format
+
+HTML
+: A markup language
+: Convert Markdown to this
+
+## Footnote
+
+This is text[^1].
+
+[^1]: This is a footnote
+
+## Horizontal Rule
+
 ---
 
-## Complex Example
+## Comment
 
-This is a complex example. It includes **bold**, *italic*, and `code` all together.
+// This comment is not rendered
 
-You can also include [links](https://example.com).
+## Escape Sequences
 
-1. **Important step**: Please run `setup()`
-2. *Optional*: Customize the configuration file
-3. Finally, run the `deploy()` command
+\*Escaped asterisk\*
 
----
-
-## Final Section
-
-This is the final paragraph. This is a test file containing all major Markdown syntax.
+\\Backslash
