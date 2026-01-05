@@ -269,31 +269,16 @@ class MarkdownParser {
 }
 
 // Example usage
-const markdown = `
-# Hello World
+import { readFileSync } from "fs";
 
-This is a **bold** text and this is *italic*.
+// Get input file from command line argument
+const inputFile = process.argv[2];
+if (!inputFile) {
+  console.error("Usage: bun index.ts <markdown-file>");
+  process.exit(1);
+}
 
-## Features
-
-- Parse headings
-- Support lists
-- Inline code: \`const x = 1\`
-- [Links](https://example.com)
-
-### Code Example
-
-\`\`\`typescript
-const greeting = "Hello, Markdown!";
-console.log(greeting);
-\`\`\`
-
-> This is a blockquote
-
----
-
-Regular paragraph with **bold**, *italic*, and \`inline code\`.
-`;
+const markdown = readFileSync(inputFile, "utf-8");
 
 const parser = new MarkdownParser();
 parser.tokenize(markdown);
