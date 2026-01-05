@@ -59,11 +59,25 @@ export class HTMLSerializer {
   }
 
   private renderListItem(item: ASTNode): string {
+    let html = "<li>";
+
+    // Add checkbox if present
     if (item.checked !== undefined) {
       const checkbox = item.checked ? "☑" : "☐";
-      return `<li>${checkbox} ${item.content}</li>`;
+      html += `${checkbox} `;
     }
-    return `<li>${item.content}</li>`;
+
+    // Add content
+    html += item.content ?? "";
+
+    // Add nested list if present
+    if (item.children && item.children.length > 0) {
+      const nestedList = item.children[0];
+      html += this.nodeToHTML(nestedList);
+    }
+
+    html += "</li>";
+    return html;
   }
 
   private escapeHTML(text: string): string {

@@ -2,6 +2,71 @@ import type { ASTNode, Token } from "./types.ts";
 
 // AST Generator - Converts Token stream to AST
 export class ASTGenerator {
+  // Build nested list structure from tokens
+  private buildListTree(
+    tokens: Token[],
+    startIndex: number,
+    parentOrdered?: boolean,
+  ): { node: ASTNode; nextIndex: number } {
+    const listItems: ASTNode[] = [];
+    let i = startIndex;
+    const baseLevel = tokens[i]?.level ?? 0;
+    const isOrdered = parentOrdered ?? tokens[i]?.ordered ?? false;
+
+    while (i < tokens.length) {
+      const token = tokens[i];
+      if (!token || token.type !== "list_item") {
+        break;
+      }
+
+      const currentLevel = token.level ?? 0;
+
+      if (currentLevel === baseLevel) {
+        const listItem: ASTNode = {
+          type: "list_item",
+          content: this.parseInline(token.content ?? ""),
+          checked: token.checked,
+          children: [],
+        };
+
+        i++;
+
+        // Check for nested list (higher indentation level)
+        if (i < tokens.length) {
+          const nextToken = tokens[i];
+          if (
+            nextToken?.type === "list_item" &&
+            (nextToken.level ?? 0) > currentLevel
+          ) {
+            const nestedResult = this.buildListTree(
+              tokens,
+              i,
+              nextToken.ordered,
+            );
+            listItem.children = [nestedResult.node];
+            i = nestedResult.nextIndex;
+          }
+        }
+
+        listItems.push(listItem);
+      } else if (currentLevel > baseLevel) {
+        // This shouldn't happen in well-formed input, skip it
+        i++;
+      } else {
+        // currentLevel < baseLevel, return to parent
+        break;
+      }
+    }
+
+    return {
+      node: {
+        type: isOrdered ? "ol" : "ul",
+        children: listItems,
+      },
+      nextIndex: i,
+    };
+  }
+
   // Parse inline elements (bold, italic, code, links)
   private parseInline(text: string): string {
     let result = text;
@@ -77,32 +142,10 @@ export class ASTGenerator {
           alignments: token.alignments,
         });
       } else if (token.type === "list_item") {
-        // Group list items
-        const listItems: ASTNode[] = [];
-        const ordered = token.ordered;
-        const baseLevel = token.level ?? 0;
-
-        while (i < tokens.length) {
-          const item = tokens[i];
-          if (!item || item.type !== "list_item") {
-            break;
-          }
-          if (item.ordered === ordered && (item.level ?? 0) === baseLevel) {
-            listItems.push({
-              type: "list_item",
-              content: this.parseInline(item.content ?? ""),
-              checked: item.checked,
-            });
-            i++;
-          } else {
-            break;
-          }
-        }
-
-        ast.push({
-          type: ordered ? "ol" : "ul",
-          children: listItems,
-        });
+        // Build nested list structure
+        const listTree = this.buildListTree(tokens, i, token.ordered);
+        ast.push(listTree.node);
+        i = listTree.nextIndex;
         continue;
       } else if (token.type === "blockquote") {
         ast.push({
