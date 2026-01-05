@@ -67,7 +67,7 @@ export class ASTGenerator {
     };
   }
 
-  // Parse inline elements (bold, italic, code, links)
+  // Parse inline elements (bold, italic, code, links, strikethrough)
   private parseInline(text: string): string {
     let result = text;
 
@@ -78,6 +78,9 @@ export class ASTGenerator {
     // Italic: *text* or _text_
     result = result.replace(/\*(.+?)\*/g, "<em>$1</em>");
     result = result.replace(/_(.+?)_/g, "<em>$1</em>");
+
+    // Strikethrough: ~~text~~
+    result = result.replace(/~~(.+?)~~/g, "<del>$1</del>");
 
     // Inline code: `text`
     result = result.replace(/`([^`]+)`/g, "<code>$1</code>");
