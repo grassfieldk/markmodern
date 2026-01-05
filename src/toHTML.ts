@@ -30,6 +30,12 @@ export class HTMLSerializer {
         return `<ul>${node.children?.map((item) => this.renderListItem(item)).join("")}</ul>`;
       case "ol":
         return `<ol>${node.children?.map((item) => this.renderListItem(item)).join("")}</ol>`;
+      case "dl":
+        return `<dl>${node.children?.map((item) => this.nodeToHTML(item)).join("")}</dl>`;
+      case "dt":
+        return `<dt>${node.content}</dt>`;
+      case "dd":
+        return `<dd>${node.content}</dd>`;
       case "blockquote":
         return `<blockquote>${node.content}</blockquote>`;
       case "code":

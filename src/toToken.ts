@@ -138,6 +138,18 @@ export class Tokenizer {
         continue;
       }
 
+      // Definition list: :   definition (must follow a term)
+      const defMatch = line.match(/^:\s+(.+)$/);
+      if (defMatch?.[1]) {
+        this.tokens.push({
+          type: "definition",
+          content: defMatch[1],
+          raw: line,
+        });
+        i++;
+        continue;
+      }
+
       // Default to paragraph
       this.tokens.push({
         type: "paragraph",

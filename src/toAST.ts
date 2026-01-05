@@ -194,11 +194,49 @@ export class ASTGenerator {
         ast.push({
           type: "hr",
         });
+      } else if (token.type === "definition") {
+        // Skip, will be grouped with preceding paragraph as definition list
       } else if (token.type === "paragraph") {
-        ast.push({
-          type: "paragraph",
-          content: this.parseInline(token.content ?? ""),
-        });
+        // Check if next token(s) are definitions
+        const definitions: string[] = [];
+        const term = this.parseInline(token.content ?? "");
+        let j = i + 1;
+        let hasDefinition = false;
+
+        while (j < tokens.length) {
+          const nextToken = tokens[j];
+          if (nextToken?.type === "definition") {
+            definitions.push(this.parseInline(nextToken.content ?? ""));
+            hasDefinition = true;
+            j++;
+          } else if (nextToken?.type === "blank") {
+            j++;
+            break;
+          } else {
+            break;
+          }
+        }
+
+        if (hasDefinition) {
+          // Create definition list node with all definitions for this term
+          const dlChildren: ASTNode[] = [
+            { type: "dt", content: term },
+          ];
+          definitions.forEach((def) => {
+            dlChildren.push({ type: "dd", content: def });
+          });
+          ast.push({
+            type: "dl",
+            children: dlChildren,
+          });
+          i = j - 1;
+        } else {
+          // Regular paragraph
+          ast.push({
+            type: "paragraph",
+            content: term,
+          });
+        }
       }
 
       i++;
