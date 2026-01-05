@@ -71,6 +71,16 @@ export class ASTGenerator {
   private parseInline(text: string): string {
     let result = text;
 
+    // First, handle escape sequences: \X becomes a placeholder to preserve it
+    const escapeMap = new Map<string, string>();
+    let escapeIndex = 0;
+    result = result.replace(/\\(.)/g, (match, char) => {
+      const placeholder = `\u0001ESCAPE${escapeIndex}\u0002`;
+      escapeMap.set(placeholder, char);
+      escapeIndex++;
+      return placeholder;
+    });
+
     // Bold + Italic: ***text*** or ___text___
     result = result.replace(/\*\*\*(.+?)\*\*\*/g, "<strong><em>$1</em></strong>");
     result = result.replace(/___(.+?)___/g, "<strong><em>$1</em></strong>");
@@ -91,6 +101,11 @@ export class ASTGenerator {
 
     // Links: [text](url)
     result = result.replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2">$1</a>');
+
+    // Finally, restore escaped characters
+    escapeMap.forEach((char, placeholder) => {
+      result = result.split(placeholder).join(char);
+    });
 
     return result;
   }
