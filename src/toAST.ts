@@ -1,7 +1,8 @@
-import type { ASTNode, Token } from "./types.ts";
+import type { ASTNode, Token, Footnotes } from "./types.ts";
 
 // AST Generator - Converts Token stream to AST
 export class ASTGenerator {
+  public footnotes: Footnotes = {};
   // Build nested list structure from tokens
   private buildListTree(
     tokens: Token[],
@@ -67,7 +68,7 @@ export class ASTGenerator {
     };
   }
 
-  // Parse inline elements (bold, italic, code, links, strikethrough)
+  // Parse inline elements (bold, italic, code, links, strikethrough, footnotes)
   private parseInline(text: string): string {
     let result = text;
 
@@ -78,6 +79,12 @@ export class ASTGenerator {
       const placeholder = `\u0001ESCAPE${escapeIndex}\u0002`;
       escapeMap.set(placeholder, char);
       escapeIndex++;
+      return placeholder;
+    });
+
+    // Handle footnote references: [^id]
+    result = result.replace(/\[\^([^\]]+)\]/g, (match, id) => {
+      const placeholder = `\u0001FOOTNOTE${id}\u0002`;
       return placeholder;
     });
 
@@ -102,6 +109,14 @@ export class ASTGenerator {
     // Links: [text](url)
     result = result.replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2">$1</a>');
 
+    // Restore footnote references as proper links
+    result = result.replace(/\u0001FOOTNOTE([^\u0002]+)\u0002/g, (match, id) => {
+      if (this.footnotes[id]) {
+        return `<sup><a href="#footnote-${id}" id="ref-${id}">[${id}]</a></sup>`;
+      }
+      return match;
+    });
+
     // Finally, restore escaped characters
     escapeMap.forEach((char, placeholder) => {
       result = result.split(placeholder).join(char);
@@ -111,11 +126,12 @@ export class ASTGenerator {
   }
 
   // Convert tokens to AST
-  generate(tokens: Token[]): ASTNode[] {
+  generate(tokens: Token[], footnotes: Footnotes = {}): ASTNode[] {
     const ast: ASTNode[] = [];
     let i = 0;
     let inCodeBlock = false;
     let codeContent = "";
+    this.footnotes = footnotes;
 
     while (i < tokens.length) {
       const token = tokens[i];

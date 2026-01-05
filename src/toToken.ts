@@ -1,17 +1,33 @@
-import type { Token } from "./types.ts";
+import type { Token, Footnotes } from "./types.ts";
 
 // Tokenizer - Converts Markdown text to Token stream
 export class Tokenizer {
   private tokens: Token[] = [];
+  public footnotes: Footnotes = {};
 
   tokenize(markdown: string): Token[] {
     const lines = markdown.split("\n");
     this.tokens = [];
+    this.footnotes = {};
     let i = 0;
 
     while (i < lines.length) {
       const line = lines[i];
       if (!line) {
+        i++;
+        continue;
+      }
+
+      // Skip comments: lines starting with //
+      if (line.trim().startsWith("//")) {
+        i++;
+        continue;
+      }
+
+      // Check for footnote definition: [^id]: content
+      const footnoteMatch = line.match(/^\[\^([^\]]+)\]:\s+(.+)$/);
+      if (footnoteMatch?.[1] && footnoteMatch[2]) {
+        this.footnotes[footnoteMatch[1]] = footnoteMatch[2];
         i++;
         continue;
       }

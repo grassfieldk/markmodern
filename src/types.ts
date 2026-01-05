@@ -9,6 +9,7 @@ export type Token = {
   rows?: string[][];
   alignments?: string[];
   checked?: boolean;
+  id?: string; // For footnote reference id
 };
 
 // AST Node type - Abstract Syntax Tree representation
@@ -22,4 +23,9 @@ export type ASTNode = {
   rows?: string[][];
   alignments?: string[];
   checked?: boolean;
+  id?: string; // For footnote reference id
 };
+
+// Footnote definition storage
+export type Footnotes = Record<string, string>;
+

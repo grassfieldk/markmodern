@@ -1,9 +1,23 @@
-import type { ASTNode } from "./types.ts";
+import type { ASTNode, Footnotes } from "./types.ts";
 
 // HTML Serializer - Converts AST to HTML
 export class HTMLSerializer {
-  serialize(ast: ASTNode[]): string {
-    return ast.map((node) => this.nodeToHTML(node)).join("\n");
+  private footnotes: Footnotes = {};
+
+  serialize(ast: ASTNode[], footnotes: Footnotes = {}): string {
+    this.footnotes = footnotes;
+    let html = ast.map((node) => this.nodeToHTML(node)).join("\n");
+
+    // Append footnotes section if there are any
+    if (Object.keys(this.footnotes).length > 0) {
+      html += "\n<div class=\"footnotes\"><ol>";
+      Object.entries(this.footnotes).forEach(([id, content]) => {
+        html += `<li id="footnote-${id}">${content} <a href="#ref-${id}">↩</a></li>`;
+      });
+      html += "</ol></div>";
+    }
+
+    return html;
   }
 
   private nodeToHTML(node: ASTNode): string {

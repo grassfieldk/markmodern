@@ -43,7 +43,7 @@ if (outputFormat === "token") {
 }
 
 const astGenerator = new ASTGenerator();
-const ast = astGenerator.generate(tokens);
+const ast = astGenerator.generate(tokens, tokenizer.footnotes);
 
 if (outputFormat === "ast") {
   console.log("=== AST Output ===");
@@ -53,7 +53,7 @@ if (outputFormat === "ast") {
 
 // Default: HTML output
 const htmlSerializer = new HTMLSerializer();
-const html = htmlSerializer.serialize(ast);
+const html = htmlSerializer.serialize(ast, tokenizer.footnotes);
 
 console.log("=== HTML Output ===");
 console.log(html);
