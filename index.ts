@@ -6,6 +6,9 @@ type Token = {
   level?: number;
   ordered?: boolean;
   raw: string;
+  headers?: string[];
+  rows?: string[][];
+  alignments?: string[];
 };
 
 type ASTNode = {
@@ -14,6 +17,9 @@ type ASTNode = {
   content?: string;
   level?: number;
   ordered?: boolean;
+  headers?: string[];
+  rows?: string[][];
+  alignments?: string[];
 };
 
 class MarkdownParser {
@@ -24,11 +30,25 @@ class MarkdownParser {
   tokenize(markdown: string): Token[] {
     const lines = markdown.split("\n");
     this.tokens = [];
+    let i = 0;
 
-    for (const line of lines) {
+    while (i < lines.length) {
+      const line = lines[i];
+
       if (!line.trim()) {
         this.tokens.push({ type: "blank", content: "", raw: line });
+        i++;
         continue;
+      }
+
+      // Check for table
+      if (line.includes("|") && !line.startsWith("```") && !line.startsWith(">") && !line.match(/^[\s]*[-*]\s/) && !line.match(/^[\s]*(\d+)\.\s/)) {
+        const tableResult = this.parseTable(lines, i);
+        if (tableResult) {
+          this.tokens.push(tableResult.token);
+          i = tableResult.newIndex;
+          continue;
+        }
       }
 
       // Headings: # ## ###
@@ -40,6 +60,7 @@ class MarkdownParser {
           content: headingMatch[2],
           raw: line,
         });
+        i++;
         continue;
       }
 
@@ -50,6 +71,7 @@ class MarkdownParser {
           content: line.replace(/^```/, "").trim(),
           raw: line,
         });
+        i++;
         continue;
       }
 
@@ -65,6 +87,7 @@ class MarkdownParser {
           content: unorderedMatch[1],
           raw: line,
         });
+        i++;
         continue;
       }
 
@@ -80,6 +103,7 @@ class MarkdownParser {
           content: orderedMatch[2],
           raw: line,
         });
+        i++;
         continue;
       }
 
@@ -90,6 +114,7 @@ class MarkdownParser {
           content: line.replace(/^>\s*/, ""),
           raw: line,
         });
+        i++;
         continue;
       }
 
@@ -100,6 +125,7 @@ class MarkdownParser {
           content: "",
           raw: line,
         });
+        i++;
         continue;
       }
 
@@ -109,6 +135,7 @@ class MarkdownParser {
         content: line,
         raw: line,
       });
+      i++;
     }
 
     return this.tokens;
@@ -183,6 +210,13 @@ class MarkdownParser {
           level: token.level,
           content: this.parseInline(token.content!),
         });
+      } else if (token.type === "table") {
+        ast.push({
+          type: "table",
+          headers: token.headers,
+          rows: token.rows,
+          alignments: token.alignments,
+        });
       } else if (token.type === "list_item") {
         // Group list items
         const listItems: ASTNode[] = [];
@@ -251,6 +285,8 @@ class MarkdownParser {
         return `<blockquote>${node.content}</blockquote>`;
       case "code":
         return `<pre><code>${this.escapeHTML(node.content || "")}</code></pre>`;
+      case "table":
+        return this.tableToHTML(node);
       case "hr":
         return "<hr />";
       default:
@@ -258,13 +294,95 @@ class MarkdownParser {
     }
   }
 
-  private escapeHTML(text: string): string {
-    return text
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#39;");
+  private tableToHTML(node: ASTNode): string {
+    if (!node.headers || !node.rows || !node.alignments) return "";
+
+    const headerHTML = node.headers
+      .map((header, index) => {
+        const align = node.alignments![index];
+        const style = align !== "left" ? ` style="text-align: ${align}"` : "";
+        return `<th${style}>${this.parseInline(header)}</th>`;
+      })
+      .join("");
+
+    const rowsHTML = node.rows
+      .map(row =>
+        row.map((cell, index) => {
+          const align = node.alignments![index];
+          const style = align !== "left" ? ` style="text-align: ${align}"` : "";
+          return `<td${style}>${this.parseInline(cell)}</td>`;
+        }).join("")
+      )
+      .map(rowHTML => `<tr>${rowHTML}</tr>`)
+      .join("");
+
+    return `<table><thead><tr>${headerHTML}</tr></thead><tbody>${rowsHTML}</tbody></table>`;
+  }
+
+  private parseTable(lines: string[], startIndex: number): { token: Token; newIndex: number } | null {
+    const headerLine = lines[startIndex];
+    if (!headerLine.includes("|")) return null;
+
+    // Check if next line is separator
+    if (startIndex + 1 >= lines.length) return null;
+    const separatorLine = lines[startIndex + 1];
+
+    if (!this.isTableSeparator(separatorLine)) return null;
+
+    // Parse headers
+    const headers = this.parseTableRow(headerLine);
+    const alignments = this.parseTableAlignments(separatorLine);
+
+    // Parse rows
+    const rows: string[][] = [];
+    let currentIndex = startIndex + 2;
+
+    while (currentIndex < lines.length) {
+      const line = lines[currentIndex];
+      if (!line.trim() || !line.includes("|")) break;
+
+      const row = this.parseTableRow(line);
+      if (row.length === 0) break;
+
+      rows.push(row);
+      currentIndex++;
+    }
+
+    return {
+      token: {
+        type: "table",
+        content: "",
+        raw: lines.slice(startIndex, currentIndex).join("\n"),
+        headers,
+        rows,
+        alignments,
+      },
+      newIndex: currentIndex,
+    };
+  }
+
+  private isTableSeparator(line: string): boolean {
+    if (!line.includes("|")) return false;
+    const cells = line.split("|").slice(1, -1);
+    return cells.every(cell => cell.trim().match(/^:?-+:?$/));
+  }
+
+  private parseTableRow(line: string): string[] {
+    return line.split("|")
+      .slice(1, -1)
+      .map(cell => cell.trim());
+  }
+
+  private parseTableAlignments(line: string): string[] {
+    return line.split("|")
+      .slice(1, -1)
+      .map(cell => {
+        const trimmed = cell.trim();
+        if (trimmed.startsWith(":") && trimmed.endsWith(":")) return "center";
+        if (trimmed.startsWith(":")) return "left";
+        if (trimmed.endsWith(":")) return "right";
+        return "left";
+      });
   }
 }
 
