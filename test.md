@@ -54,9 +54,9 @@ Image with Title:
 ## Table
 
 | Left | Center | Right |
-| :--- | :---: | ---: |
-| A1 | B1 | C1 |
-| A2 | B2 | C2 |
+| :--- | :----: | ----: |
+| A1   |   B1   |    C1 |
+| A2   |   B2   |    C2 |
 
 ## Code Block
 

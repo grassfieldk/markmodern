@@ -88,7 +88,7 @@ export class Tokenizer {
 
         // Collect lines until closing :::
         while (j < lines.length && !lines[j].match(/^:::$/)) {
-          content += lines[j] + "\n";
+          content += `${lines[j]}\n`;
           j++;
         }
 
@@ -109,14 +109,13 @@ export class Tokenizer {
       if (captionedImageMatch) {
         this.tokens.push({
           type: "image_captioned",
-          content: captionedImageMatch[1], // alt text / title
+          content: captionedImageMatch[1] ?? "", // alt text / title
           raw: line,
-          id: captionedImageMatch[2], // url stored in id
+          id: captionedImageMatch[2] ?? "", // url stored in id
         });
         i++;
         continue;
       }
-
 
       // Unordered lists: - or * or [ ] / [x]
       const unorderedMatch = line.match(

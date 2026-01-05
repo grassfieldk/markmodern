@@ -56,7 +56,8 @@ export class HTMLSerializer {
   private admonitionToHTML(node: ASTNode): string {
     const admonType = node.id ?? "note";
     const admonSubtype = node.headers?.[0] ?? "";
-    const content = node.children?.map((child) => this.nodeToHTML(child)).join("\n") ?? "";
+    const content =
+      node.children?.map((child) => this.nodeToHTML(child)).join("\n") ?? "";
     const classes = `admonition admonition-${admonType}${admonSubtype ? ` admonition-${admonSubtype}` : ""}`;
     return `<aside class="${classes}">\n${content}\n</aside>`;
   }

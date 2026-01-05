@@ -89,7 +89,10 @@ export class ASTGenerator {
     });
 
     // Ruby/Furigana: {kanji}(kana)
-    result = result.replace(/\{([^}]+)\}\(([^)]+)\)/g, "<ruby>$1<rt>$2</rt></ruby>");
+    result = result.replace(
+      /\{([^}]+)\}\(([^)]+)\)/g,
+      "<ruby>$1<rt>$2</rt></ruby>",
+    );
 
     // Bold + Italic: ***text*** or ___text___
     result = result.replace(
@@ -113,7 +116,10 @@ export class ASTGenerator {
     result = result.replace(/`([^`]+)`/g, "<code>$1</code>");
 
     // Images: ![alt](url)
-    result = result.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" />');
+    result = result.replace(
+      /!\[([^\]]*)\]\(([^)]+)\)/g,
+      '<img src="$2" alt="$1" />',
+    );
 
     // Links: [text](url)
     result = result.replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2">$1</a>');
