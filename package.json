@@ -1,14 +1,42 @@
 {
   "name": "markmodern",
-  "module": "index.ts",
+  "version": "0.1.0",
+  "description": "A markup language based on Markdown, designed for note-taking and article creation",
+  "module": "dist/index.js",
+  "main": "dist/index.js",
   "type": "module",
+  "author": "GrassfieldK",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/grassfield/markmodern"
+  },
+  "keywords": [
+    "markdown",
+    "parser",
+    "typescript",
+    "html",
+    "ast"
+  ],
+  "files": [
+    "dist",
+    "src",
+    "README.md",
+    "README.ja.md",
+    "LICENSE"
+  ],
   "scripts": {
+    "build": "tsc",
+    "dev": "bun index.ts",
+    "start": "bun index.ts",
+    "test": "bun index.ts temp.md",
     "format": "biome format . --write",
     "check": "biome check .",
     "fix": "biome check . --write"
   },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "^1.3.5",
+    "typescript": "^5.6"
   },
   "peerDependencies": {
     "typescript": "^5"
