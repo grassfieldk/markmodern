@@ -1,4 +1,4 @@
-import { readFileSync } from "fs";
+import { readFileSync } from "node:fs";
 import { ASTGenerator } from "./src/toAST.ts";
 import { HTMLSerializer } from "./src/toHTML.ts";
 import { Tokenizer } from "./src/toToken.ts";

@@ -11,6 +11,10 @@ export class Tokenizer {
 
     while (i < lines.length) {
       const line = lines[i];
+      if (!line) {
+        i++;
+        continue;
+      }
 
       if (!line.trim()) {
         this.tokens.push({ type: "blank", content: "", raw: line });
@@ -36,7 +40,7 @@ export class Tokenizer {
 
       // Headings: # ## ###
       const headingMatch = line.match(/^(#{1,6})\s+(.+)$/);
-      if (headingMatch && headingMatch[1] && headingMatch[2]) {
+      if (headingMatch?.[1] && headingMatch[2]) {
         this.tokens.push({
           type: "heading",
           level: headingMatch[1].length,
@@ -60,7 +64,7 @@ export class Tokenizer {
 
       // Unordered lists: - or *
       const unorderedMatch = line.match(/^[\s]*[-*]\s+(.+)$/);
-      if (unorderedMatch && unorderedMatch[1]) {
+      if (unorderedMatch?.[1]) {
         const indentMatch = line.match(/^(\s*)/);
         const indent = indentMatch?.[1]?.length ?? 0;
         this.tokens.push({
@@ -76,7 +80,7 @@ export class Tokenizer {
 
       // Ordered lists: 1. 2. etc
       const orderedMatch = line.match(/^[\s]*(\d+)\.\s+(.+)$/);
-      if (orderedMatch && orderedMatch[2]) {
+      if (orderedMatch?.[2]) {
         const indentMatch = line.match(/^(\s*)/);
         const indent = indentMatch?.[1]?.length ?? 0;
         this.tokens.push({
@@ -129,11 +133,12 @@ export class Tokenizer {
     startIndex: number,
   ): { token: Token; newIndex: number } | null {
     const headerLine = lines[startIndex];
-    if (!headerLine.includes("|")) return null;
+    if (!headerLine || !headerLine.includes("|")) return null;
 
     // Check if next line is separator
     if (startIndex + 1 >= lines.length) return null;
     const separatorLine = lines[startIndex + 1];
+    if (!separatorLine) return null;
 
     if (!this.isTableSeparator(separatorLine)) return null;
 
@@ -147,7 +152,7 @@ export class Tokenizer {
 
     while (currentIndex < lines.length) {
       const line = lines[currentIndex];
-      if (!line.trim() || !line.includes("|")) break;
+      if (!line || !line.trim() || !line.includes("|")) break;
 
       const row = this.parseTableRow(line);
       if (row.length === 0) break;

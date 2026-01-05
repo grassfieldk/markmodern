@@ -53,7 +53,7 @@ export class ASTGenerator {
       }
 
       if (inCodeBlock) {
-        codeContent += token.raw + "\n";
+        codeContent += `${token.raw}\n`;
         i++;
         continue;
       }
@@ -67,7 +67,7 @@ export class ASTGenerator {
         ast.push({
           type: "heading",
           level: token.level,
-          content: this.parseInline(token.content!),
+          content: this.parseInline(token.content ?? ""),
         });
       } else if (token.type === "table") {
         ast.push({
@@ -90,7 +90,7 @@ export class ASTGenerator {
           if (item.ordered === ordered && (item.level ?? 0) === baseLevel) {
             listItems.push({
               type: "list_item",
-              content: this.parseInline(item.content!),
+              content: this.parseInline(item.content ?? ""),
             });
             i++;
           } else {
@@ -106,7 +106,7 @@ export class ASTGenerator {
       } else if (token.type === "blockquote") {
         ast.push({
           type: "blockquote",
-          content: this.parseInline(token.content!),
+          content: this.parseInline(token.content ?? ""),
         });
       } else if (token.type === "horizontal_rule") {
         ast.push({
@@ -115,7 +115,7 @@ export class ASTGenerator {
       } else if (token.type === "paragraph") {
         ast.push({
           type: "paragraph",
-          content: this.parseInline(token.content!),
+          content: this.parseInline(token.content ?? ""),
         });
       }
 

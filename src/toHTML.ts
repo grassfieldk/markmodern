@@ -34,8 +34,9 @@ export class HTMLSerializer {
 
     const headerHTML = node.headers
       .map((header, index) => {
-        const align = node.alignments![index];
-        const style = align !== "left" ? ` style="text-align: ${align}"` : "";
+        const align = node.alignments?.[index];
+        const style =
+          align && align !== "left" ? ` style="text-align: ${align}"` : "";
         return `<th${style}>${header}</th>`;
       })
       .join("");
@@ -44,9 +45,9 @@ export class HTMLSerializer {
       .map((row) =>
         row
           .map((cell, index) => {
-            const align = node.alignments![index];
+            const align = node.alignments?.[index];
             const style =
-              align !== "left" ? ` style="text-align: ${align}"` : "";
+              align && align !== "left" ? ` style="text-align: ${align}"` : "";
             return `<td${style}>${cell}</td>`;
           })
           .join(""),
