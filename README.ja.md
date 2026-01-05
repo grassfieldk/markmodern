@@ -1,3 +1,5 @@
+[English](README.md)
+
 # Markmodern
 
 メモや記事作成向けに設計された Markdown ベースのマークアップ言語

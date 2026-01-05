@@ -1,4 +1,6 @@
-# markmodern
+[日本語](README.ja.md)
+
+# Markmodern
 
 A markup language based on Markdown, designed for note-taking and article creation.
 File extension: `.mm`
