@@ -28,4 +28,3 @@ export type ASTNode = {
 
 // Footnote definition storage
 export type Footnotes = Record<string, string>;
-

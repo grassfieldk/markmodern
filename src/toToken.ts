@@ -1,4 +1,4 @@
-import type { Token, Footnotes } from "./types.ts";
+import type { Footnotes, Token } from "./types";
 
 // Tokenizer - Converts Markdown text to Token stream
 export class Tokenizer {

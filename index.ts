@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
-import { ASTGenerator } from "./src/toAST.ts";
-import { HTMLSerializer } from "./src/toHTML.ts";
-import { Tokenizer } from "./src/toToken.ts";
+import { ASTGenerator } from "./src/toAST";
+import { HTMLSerializer } from "./src/toHTML";
+import { Tokenizer } from "./src/toToken";
 
 // Get input file and output format from command line arguments
 const inputFile = process.argv[2];

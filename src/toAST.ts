@@ -1,4 +1,4 @@
-import type { ASTNode, Token, Footnotes } from "./types.ts";
+import type { ASTNode, Footnotes, Token } from "./types";
 
 // AST Generator - Converts Token stream to AST
 export class ASTGenerator {
@@ -75,21 +75,24 @@ export class ASTGenerator {
     // First, handle escape sequences: \X becomes a placeholder to preserve it
     const escapeMap = new Map<string, string>();
     let escapeIndex = 0;
-    result = result.replace(/\\(.)/g, (match, char) => {
-      const placeholder = `\u0001ESCAPE${escapeIndex}\u0002`;
+    result = result.replace(/\\(.)/g, (_match, char) => {
+      const placeholder = `__ESCAPE_${escapeIndex}__`;
       escapeMap.set(placeholder, char);
       escapeIndex++;
       return placeholder;
     });
 
     // Handle footnote references: [^id]
-    result = result.replace(/\[\^([^\]]+)\]/g, (match, id) => {
-      const placeholder = `\u0001FOOTNOTE${id}\u0002`;
+    result = result.replace(/\[\^([^\]]+)\]/g, (_match, id) => {
+      const placeholder = `__FOOTNOTE_${id}__`;
       return placeholder;
     });
 
     // Bold + Italic: ***text*** or ___text___
-    result = result.replace(/\*\*\*(.+?)\*\*\*/g, "<strong><em>$1</em></strong>");
+    result = result.replace(
+      /\*\*\*(.+?)\*\*\*/g,
+      "<strong><em>$1</em></strong>",
+    );
     result = result.replace(/___(.+?)___/g, "<strong><em>$1</em></strong>");
 
     // Bold: **text** or __text__
@@ -110,7 +113,7 @@ export class ASTGenerator {
     result = result.replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2">$1</a>');
 
     // Restore footnote references as proper links
-    result = result.replace(/\u0001FOOTNOTE([^\u0002]+)\u0002/g, (match, id) => {
+    result = result.replace(/__FOOTNOTE_([^_]+)__/g, (match, id) => {
       if (this.footnotes[id]) {
         return `<sup><a href="#footnote-${id}" id="ref-${id}">[${id}]</a></sup>`;
       }
@@ -219,9 +222,7 @@ export class ASTGenerator {
 
         if (hasDefinition) {
           // Create definition list node with all definitions for this term
-          const dlChildren: ASTNode[] = [
-            { type: "dt", content: term },
-          ];
+          const dlChildren: ASTNode[] = [{ type: "dt", content: term }];
           definitions.forEach((def) => {
             dlChildren.push({ type: "dd", content: def });
           });

@@ -1,4 +1,4 @@
-import type { ASTNode, Footnotes } from "./types.ts";
+import type { ASTNode, Footnotes } from "./types";
 
 // HTML Serializer - Converts AST to HTML
 export class HTMLSerializer {
@@ -10,7 +10,7 @@ export class HTMLSerializer {
 
     // Append footnotes section if there are any
     if (Object.keys(this.footnotes).length > 0) {
-      html += "\n<div class=\"footnotes\"><ol>";
+      html += '\n<div class="footnotes"><ol>';
       Object.entries(this.footnotes).forEach(([id, content]) => {
         html += `<li id="footnote-${id}">${content} <a href="#ref-${id}">↩</a></li>`;
       });
@@ -93,7 +93,9 @@ export class HTMLSerializer {
     // Add nested list if present
     if (item.children && item.children.length > 0) {
       const nestedList = item.children[0];
-      html += this.nodeToHTML(nestedList);
+      if (nestedList) {
+        html += this.nodeToHTML(nestedList);
+      }
     }
 
     html += "</li>";
