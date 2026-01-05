@@ -71,6 +71,10 @@ export class ASTGenerator {
   private parseInline(text: string): string {
     let result = text;
 
+    // Bold + Italic: ***text*** or ___text___
+    result = result.replace(/\*\*\*(.+?)\*\*\*/g, "<strong><em>$1</em></strong>");
+    result = result.replace(/___(.+?)___/g, "<strong><em>$1</em></strong>");
+
     // Bold: **text** or __text__
     result = result.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
     result = result.replace(/__(.+?)__/g, "<strong>$1</strong>");
