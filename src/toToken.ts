@@ -21,6 +21,7 @@ export class Tokenizer {
 
     while (j < lines.length) {
       const currentLine = lines[j];
+      if (!currentLine) break;
 
       // Check for nested opening
       if (currentLine.match(openingPattern)) {
@@ -112,7 +113,7 @@ export class Tokenizer {
           type: "code_fence",
           content: line.replace(/^`{3,}/, "").trim(),
           raw: line,
-          level: codeFenceMatch[1].length, // Store fence length
+          level: codeFenceMatch[1]?.length || 3, // Store fence length
         });
         i++;
         continue;
@@ -149,7 +150,7 @@ export class Tokenizer {
         let j = i + 1;
 
         // Collect lines until closing :::
-        while (j < lines.length && !lines[j].match(/^:::$/)) {
+        while (j < lines.length && !lines[j]?.match(/^:::$/)) {
           content += `${lines[j]}\n`;
           j++;
         }
