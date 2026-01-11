@@ -233,6 +233,22 @@ export class ASTGenerator {
           headers: [admonKind],
           children: innerAST,
         });
+      } else if (token.type === "details") {
+        // Process details block content through tokenizer and generator recursively
+        const summary = this.parseInline(token.id ?? "");
+        const detailsContent = token.content ?? "";
+
+        // Recursively tokenize and parse the content inside details
+        const tokenizer = new (require("./toToken").Tokenizer)();
+        const innerTokens = tokenizer.tokenize(detailsContent);
+        const generator = new ASTGenerator();
+        const innerAST = generator.generate(innerTokens, this.footnotes);
+
+        ast.push({
+          type: "details",
+          content: summary,
+          children: innerAST,
+        });
       } else if (token.type === "horizontal_rule") {
         ast.push({
           type: "hr",

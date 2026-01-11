@@ -42,6 +42,8 @@ export class HTMLSerializer {
         return `<figure><img src="${node.id}" alt="${node.content}" /><figcaption>${node.content}</figcaption></figure>`;
       case "admonition":
         return this.admonitionToHTML(node);
+      case "details":
+        return this.detailsToHTML(node);
       case "code":
         return `<pre><code>${this.escapeHTML(node.content || "")}</code></pre>`;
       case "table":
@@ -60,6 +62,13 @@ export class HTMLSerializer {
       node.children?.map((child) => this.nodeToHTML(child)).join("\n") ?? "";
     const classes = `admonition admonition-${admonType}${admonSubtype ? ` admonition-${admonSubtype}` : ""}`;
     return `<aside class="${classes}">\n${content}\n</aside>`;
+  }
+
+  private detailsToHTML(node: ASTNode): string {
+    const summary = node.content ?? "";
+    const content =
+      node.children?.map((child) => this.nodeToHTML(child)).join("\n") ?? "";
+    return `<details>\n<summary>${summary}</summary>\n${content}\n</details>`;
   }
 
   private tableToHTML(node: ASTNode): string {

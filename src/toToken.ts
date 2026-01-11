@@ -78,6 +78,48 @@ export class Tokenizer {
         continue;
       }
 
+      // Details blocks: ===summary
+      const detailsMatch = line.match(/^===(.*)$/);
+      if (detailsMatch !== null && detailsMatch[1]?.trim()) {
+        const summary = detailsMatch[1].trim();
+        let content = "";
+        let j = i + 1;
+        let detailsDepth = 1; // Track nested details blocks
+
+        // Collect lines until closing === (accounting for nested details)
+        while (j < lines.length) {
+          const currentLine = lines[j];
+
+          // Check for nested details opening
+          if (currentLine.match(/^===.+$/)) {
+            detailsDepth++;
+          }
+
+          // Check for closing ===
+          if (currentLine.match(/^===$/) || currentLine === "===") {
+            detailsDepth--;
+            if (detailsDepth === 0) {
+              // This is our closing ===
+              j++;
+              break;
+            }
+          }
+
+          content += `${currentLine}\n`;
+          j++;
+        }
+
+        this.tokens.push({
+          type: "details",
+          content: content.trim(),
+          raw: line,
+          id: summary, // Store summary as id
+        });
+
+        i = j; // Skip past the closing ===
+        continue;
+      }
+
       // Admonition blocks: :::type [subtype]
       const admonitionMatch = line.match(/^:::([a-z]+)(?:\s+([a-z]+))?$/);
       if (admonitionMatch?.[1]) {

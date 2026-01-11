@@ -128,3 +128,109 @@ Strong warning. Do not do this!
 :::note
 Basic note without subtype.
 :::
+
+## Details Blocks
+
+### Basic Details
+
+===Simple Summary
+Simple content here.
+===
+
+### Multiple Paragraphs
+
+===Multiple Paragraphs in Details
+This is the first paragraph.
+
+This is the second paragraph with multiple lines.
+
+This is the third paragraph.
+===
+
+### Details with List
+
+===Details with List
+- Item 1
+- Item 2
+  - Nested item
+- Item 3
+
+1. Ordered 1
+2. Ordered 2
+3. Ordered 3
+
+- [x] Checked task
+- [ ] Unchecked task
+===
+
+### Details with Inline Elements
+
+===Inline Elements in Summary
+This has **bold**, *italic*, ***bold italic***, ~~strikethrough~~, and `code`.
+===
+
+### Details with Code Block
+
+===Code Block in Details
+Here is some code:
+
+```javascript
+function example() {
+  return "Hello";
+}
+```
+
+More text after code.
+===
+
+### Details with Table
+
+===Table in Details
+| Name   | Age |
+|--------|-----|
+| Alice  | 30  |
+| Bob    | 25  |
+
+Additional content.
+===
+
+### Nested Details
+
+===Outer Details
+Content of outer details.
+
+===Inner Details
+Content of inner details.
+===
+
+Back to outer details.
+===
+
+### Details with Admonition
+
+===Details with Admonition
+:::note info
+This is a note inside details.
+:::
+
+More text.
+===
+
+### Complex Summary
+
+===Summary with **Bold** and `Code`
+Content here.
+===
+
+===Summary with [Link](https://example.com)
+Content here.
+===
+
+### Details with Footnote
+
+===Details with Footnote
+This references a note[^2].
+
+[^2]: This is a note inside details.
+===
+
