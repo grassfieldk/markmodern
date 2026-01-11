@@ -1,0 +1,5 @@
+[test]
+# Only test source files, not compiled output
+only = ["src/**/*.test.ts"]
+
+

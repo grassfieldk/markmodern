@@ -29,7 +29,9 @@
     "build": "tsc",
     "dev": "bun index.ts",
     "start": "bun index.ts",
-    "test": "bun index.ts temp.md",
+    "test": "bun test",
+    "test:watch": "bun test --watch",
+    "test:coverage": "bun test --coverage",
     "format": "biome format . --write",
     "check": "biome check .",
     "fix": "biome check . --write"
