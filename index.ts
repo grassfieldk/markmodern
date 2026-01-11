@@ -63,13 +63,13 @@ const htmlSerializer = new HTMLSerializer();
 if (writeToFile) {
   // Generate complete HTML document with embedded CSS from root
   const html = htmlSerializer.serializeDocument(ast, tokenizer.footnotes, {
-    title: inputFile.replace(/\.(mm|md)$/, ""),
+    title: inputFile.replace(/\.(mdn|md)$/, ""),
     cssFile: "style.css",
     embedCss: true,
   });
 
   // Determine output file name
-  const outputFile = outputFileArg || inputFile.replace(/\.(mm|md)$/, ".html");
+  const outputFile = outputFileArg || inputFile.replace(/\.(mdn|md)$/, ".html");
   writeFileSync(outputFile, html, "utf-8");
   console.log(`HTML file created: ${outputFile}`);
 } else {

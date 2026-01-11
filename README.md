@@ -3,7 +3,7 @@
 # Markmodern
 
 A markup language based on Markdown, designed for note-taking and article creation.
-File extension: `.mm`, `.mdn`
+File extension: `.mdn`
 
 
 ## Features
@@ -49,19 +49,19 @@ File extension: `.mm`, `.mdn`
 
 ```bash
 # Output HTML to console
-npm run start -- <input.mm>
+npm run start -- <input.mdn>
 
 # Output HTML to file with embedded CSS
-npm run start -- <input.mm> -f
+npm run start -- <input.mdn> -f
 
 # Output token stream
-npm run start -- <input.mm> -t
+npm run start -- <input.mdn> -t
 
 # Output AST
-npm run start -- <input.mm> -a
+npm run start -- <input.mdn> -a
 
 # Output HTML fragment
-npm run start -- <input.mm> -h
+npm run start -- <input.mdn> -h
 ```
 
 

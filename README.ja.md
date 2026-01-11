@@ -3,7 +3,7 @@
 # Markmodern
 
 メモや記事作成向けに設計された Markdown ベースのマークアップ言語
-拡張子: `.mm`, `.mdn`
+拡張子: `.mdn`
 
 
 ## 機能
@@ -49,19 +49,19 @@
 
 ```bash
 # HTML をコンソールに出力
-npm run start -- <input.mm>
+npm run start -- <input.mdn>
 
 # HTML をファイルに出力（CSS 埋め込み）
-npm run start -- <input.mm> -f
+npm run start -- <input.mdn> -f
 
 # トークンストリームとして出力
-npm run start -- <input.mm> -t
+npm run start -- <input.mdn> -t
 
 # AST として出力
-npm run start -- <input.mm> -a
+npm run start -- <input.mdn> -a
 
 # HTML フラグメントとして出力
-npm run start -- <input.mm> -h
+npm run start -- <input.mdn> -h
 ```
 
 
