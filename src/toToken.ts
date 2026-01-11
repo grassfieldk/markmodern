@@ -120,7 +120,7 @@ export class Tokenizer {
 
       // Details blocks: ===summary
       const detailsMatch = line.match(/^===(.*)$/);
-      if (detailsMatch !== null && detailsMatch[1]?.trim()) {
+      if (detailsMatch?.[1]?.trim()) {
         const summary = detailsMatch[1].trim();
         const { content, endIndex } = this.collectBlockContent(
           lines,

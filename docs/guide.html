@@ -19,7 +19,12 @@ body {
   max-width: 900px;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   margin: 1.5rem 0 0.5rem;
   font-weight: 600;
 }
@@ -51,7 +56,8 @@ a:visited {
   color: #663399;
 }
 
-ul, ol {
+ul,
+ol {
   margin: 1rem 0;
   padding-left: 2rem;
 }
@@ -113,7 +119,8 @@ table {
   border: 1px solid #ddd;
 }
 
-th, td {
+th,
+td {
   padding: 0.75rem;
   text-align: left;
   border-bottom: 1px solid #ddd;
@@ -322,15 +329,15 @@ console.log(x);</code></pre>
 <p><strong>Syntax:</strong></p>
 <pre><code>Text with footnote[^1]</code></pre>
 <p><strong>Display:</strong></p>
-<p>Text with footnote<strong>FOOTNOTE_1</strong></p>
+<p>Text with footnote<sup><a href="#footnote-1" id="ref-1">[1]</a></sup></p>
 <hr />
 <h2>Escaping</h2>
 <p><strong>Syntax:</strong></p>
 <pre><code>\*asterisk\*
 \# hash</code></pre>
 <p><strong>Display:</strong></p>
-<p><strong>ESCAPE<em>0</strong>asterisk<strong>ESCAPE</em>1</strong></p>
-<p><strong>ESCAPE_0</strong> hash</p>
+<p>*asterisk*</p>
+<p># hash</p>
 <hr />
 <h2>Comments</h2>
 <p><strong>Syntax:</strong></p>

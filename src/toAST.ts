@@ -85,7 +85,7 @@ export class ASTGenerator {
     const escapeMap = new Map<string, string>();
     let escapeIndex = 0;
     result = result.replace(/\\(.)/g, (_match, char) => {
-      const placeholder = `__ESCAPE_${escapeIndex}__`;
+      const placeholder = `\uFFF0ESCAPE${escapeIndex}\uFFF1`;
       escapeMap.set(placeholder, char);
       escapeIndex++;
       return placeholder;
@@ -93,7 +93,7 @@ export class ASTGenerator {
 
     // Handle footnote references: [^id]
     result = result.replace(/\[\^([^\]]+)\]/g, (_match, id) => {
-      const placeholder = `__FOOTNOTE_${id}__`;
+      const placeholder = `\uFFF0FOOTNOTE${id}\uFFF1`;
       return placeholder;
     });
 
@@ -134,12 +134,15 @@ export class ASTGenerator {
     result = result.replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2">$1</a>');
 
     // Restore footnote references as proper links
-    result = result.replace(/__FOOTNOTE_([^_]+)__/g, (match, id) => {
-      if (this.footnotes[id]) {
-        return `<sup><a href="#footnote-${id}" id="ref-${id}">[${id}]</a></sup>`;
-      }
-      return match;
-    });
+    result = result.replace(
+      /\uFFF0FOOTNOTE([^\uFFF1]+)\uFFF1/g,
+      (match, id) => {
+        if (this.footnotes[id]) {
+          return `<sup><a href="#footnote-${id}" id="ref-${id}">[${id}]</a></sup>`;
+        }
+        return match;
+      },
+    );
 
     // Finally, restore escaped characters
     escapeMap.forEach((char, placeholder) => {

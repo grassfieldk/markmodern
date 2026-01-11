@@ -1,5 +1,5 @@
 import { readFileSync } from "node:fs";
-import { dirname, resolve } from "node:path";
+import { resolve } from "node:path";
 import type { ASTNode, Footnotes } from "./types";
 
 // HTML Document options
@@ -41,7 +41,7 @@ export class HTMLSerializer {
   <style>
 ${cssContent}
   </style>`;
-      } catch (err) {
+      } catch (_err) {
         // If CSS file not found, fall back to link
         headContent += `
   <link rel="stylesheet" href="${cssFile}">`;
