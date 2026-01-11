@@ -1,9 +1,12 @@
+import { readFileSync } from "node:fs";
+import { dirname, resolve } from "node:path";
 import type { ASTNode, Footnotes } from "./types";
 
 // HTML Document options
 export interface DocumentOptions {
   title?: string;
   cssFile?: string;
+  embedCss?: boolean;
   lang?: string;
 }
 
@@ -20,18 +23,38 @@ export class HTMLSerializer {
     const {
       title = "Markmodern Document",
       cssFile = "style.css",
+      embedCss = false,
       lang = "ja",
     } = options;
 
     const bodyContent = this.serialize(ast, footnotes);
 
+    let headContent = `  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${this.escapeHTML(title)}</title>`;
+
+    if (embedCss) {
+      try {
+        const cssPath = resolve(process.cwd(), cssFile);
+        const cssContent = readFileSync(cssPath, "utf-8");
+        headContent += `
+  <style>
+${cssContent}
+  </style>`;
+      } catch (err) {
+        // If CSS file not found, fall back to link
+        headContent += `
+  <link rel="stylesheet" href="${cssFile}">`;
+      }
+    } else {
+      headContent += `
+  <link rel="stylesheet" href="${cssFile}">`;
+    }
+
     return `<!DOCTYPE html>
 <html lang="${lang}">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${this.escapeHTML(title)}</title>
-  <link rel="stylesheet" href="${cssFile}">
+${headContent}
 </head>
 <body>
 ${bodyContent}

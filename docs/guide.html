@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>docs/guide</title>
+  <style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: sans-serif;
+  line-height: 1.6;
+  color: #333;
+  background-color: #fff;
+  margin: 0 auto;
+  padding: 2rem;
+  max-width: 900px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 1.5rem 0 0.5rem;
+  font-weight: 600;
+}
+
+h1 {
+  font-size: 2.5rem;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 0.5rem;
+}
+
+h2 {
+  font-size: 2rem;
+}
+
+h3 {
+  font-size: 1.5rem;
+}
+
+p {
+  margin: 1rem 0;
+}
+
+a {
+  color: #0066cc;
+  text-decoration: underline;
+}
+
+a:visited {
+  color: #663399;
+}
+
+ul, ol {
+  margin: 1rem 0;
+  padding-left: 2rem;
+}
+
+li {
+  margin: 0.25rem 0;
+}
+
+dl {
+  margin: 1rem 0;
+}
+
+dt {
+  font-weight: 600;
+}
+
+dd {
+  margin-left: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+code {
+  font-family: monospace;
+  background-color: #f5f5f5;
+  padding: 0.2em 0.4em;
+  font-size: 0.9em;
+}
+
+pre {
+  background-color: #f5f5f5;
+  padding: 1rem;
+  overflow-x: auto;
+  margin: 1rem 0;
+  border: 1px solid #ddd;
+}
+
+pre code {
+  background-color: transparent;
+  padding: 0;
+}
+
+blockquote {
+  border-left: 3px solid #ddd;
+  padding-left: 1rem;
+  margin-left: 0;
+  color: #666;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #ddd;
+  margin: 2rem 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  border: 1px solid #ddd;
+}
+
+th, td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background-color: #f5f5f5;
+  font-weight: 600;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  margin: 1rem 0;
+}
+
+figure {
+  margin: 1rem 0;
+  text-align: center;
+}
+
+figcaption {
+  font-size: 0.9em;
+  color: #666;
+}
+
+details {
+  border: 1px solid #ddd;
+  padding: 1rem;
+  margin: 1rem 0;
+}
+
+details > summary {
+  cursor: pointer;
+  font-weight: 600;
+  user-select: none;
+}
+
+.admonition {
+  padding: 1rem;
+  margin: 1rem 0;
+}
+
+.admonition-info {
+  background-color: #e6f2ff;
+}
+
+.admonition-warn {
+  background-color: #fff3e6;
+}
+
+.admonition-alert {
+  background-color: #ffe6e6;
+}
+
+ruby rt {
+  font-size: 0.55em;
+}
+
+del {
+  text-decoration: line-through;
+}
+
+  </style>
+</head>
+<body>
+<h1>Markmodern Syntax Guide</h1>
+<p>A comprehensive guide to all syntax features and their display examples.</p>
+<hr />
+<h2>Headings</h2>
+<p><strong>Syntax:</strong></p>
+<pre><code># h1
+## h2
+### h3
+#### h4
+##### h5
+###### h6</code></pre>
+<p><strong>Display:</strong></p>
+<h1>h1</h1>
+<h2>h2</h2>
+<h3>h3</h3>
+<h4>h4</h4>
+<h5>h5</h5>
+<h6>h6</h6>
+<hr />
+<h2>Text Formatting</h2>
+<p><strong>Syntax:</strong></p>
+<pre><code>**bold**
+*italic*
+***bold and italic***
+~~strikethrough~~
+`code`</code></pre>
+<p><strong>Display:</strong></p>
+<p><strong>bold</strong></p>
+<p><em>italic</em></p>
+<p><strong><em>bold and italic</em></strong></p>
+<p><del>strikethrough</del></p>
+<p><code>code</code></p>
+<hr />
+<h2>Links</h2>
+<p><strong>Syntax:</strong></p>
+<pre><code>[link](https://example.com)</code></pre>
+<p><strong>Display:</strong></p>
+<p><a href="https://example.com">link</a></p>
+<hr />
+<h2>Images</h2>
+<p><strong>Syntax:</strong></p>
+<pre><code>![alt text](https://via.placeholder.com/300x200)
+-![with caption](https://via.placeholder.com/400x300)</code></pre>
+<p><strong>Display:</strong></p>
+<p><img src="https://via.placeholder.com/300x200" alt="alt text" /></p>
+<figure><img src="https://via.placeholder.com/400x300" alt="with caption" /><figcaption>with caption</figcaption></figure>
+<hr />
+<h2>Lists</h2>
+<p><strong>Syntax:</strong></p>
+<pre><code>- item 1
+- item 2
+  - nested 1
+  - nested 2
+- item 3</code></pre>
+<p><strong>Display:</strong></p>
+<ul><li>item 1</li><li>item 2<ul><li>nested 1</li><li>nested 2</li></ul></li><li>item 3</li></ul>
+<p><strong>Ordered:</strong></p>
+<pre><code>1. first
+2. second
+   1. nested
+3. third</code></pre>
+<p><strong>Display:</strong></p>
+<ol><li>first</li><li>second<ol><li>nested</li></ol></li><li>third</li></ol>
+<p><strong>Checkboxes:</strong></p>
+<pre><code>- [x] completed
+- [ ] incomplete</code></pre>
+<p><strong>Display:</strong></p>
+<ul><li>☑ completed</li><li>☐ incomplete</li></ul>
+<hr />
+<h2>Code Blocks</h2>
+<p><strong>Syntax:</strong></p>
+<pre><code>```javascript
+const x = 10;
+console.log(x);
+```</code></pre>
+<p><strong>Display:</strong></p>
+<pre><code>const x = 10;
+console.log(x);</code></pre>
+<hr />
+<h2>Blockquotes</h2>
+<p><strong>Syntax:</strong></p>
+<pre><code>&gt; This is a quote
+&gt; Multiple lines work</code></pre>
+<p><strong>Display:</strong></p>
+<blockquote>This is a quote</blockquote>
+<blockquote>Multiple lines work</blockquote>
+<hr />
+<h2>Tables</h2>
+<p><strong>Syntax:</strong></p>
+<pre><code>| Column 1 | Column 2 | Column 3 |
+|----------|----------|----------:|
+| A        | B        | C        |
+| D        | E        | F        |</code></pre>
+<p><strong>Display:</strong></p>
+<table><thead><tr><th>Column 1</th><th>Column 2</th><th style="text-align: right">Column 3</th></tr></thead><tbody><tr><td>A</td><td>B</td><td style="text-align: right">C</td></tr><tr><td>D</td><td>E</td><td style="text-align: right">F</td></tr></tbody></table>
+<hr />
+<h2>Definition Lists</h2>
+<p><strong>Syntax:</strong></p>
+<pre><code>term
+: definition 1
+: definition 2</code></pre>
+<p><strong>Display:</strong></p>
+<dl><dt>term</dt><dd>definition 1</dd><dd>definition 2</dd></dl>
+<hr />
+<h2>Ruby Text (Furigana)</h2>
+<p><strong>Syntax:</strong></p>
+<pre><code>{kanji}(reading)
+{Tokyo}(Tokyo)</code></pre>
+<p><strong>Display:</strong></p>
+<p><ruby>kanji<rt>reading</rt></ruby></p>
+<p><ruby>Tokyo<rt>Tokyo</rt></ruby></p>
+<hr />
+<h2>Details Block</h2>
+<p><strong>Syntax:</strong></p>
+<pre><code>===Click to expand</code></pre>
+<p><strong>Display:</strong></p>
+<details>
+<summary>Click to expand</summary>
+<p>Content inside the details block.</p>
+<p>Can contain multiple paragraphs.</p>
+</details>
+<hr />
+<h2>Admonition Block</h2>
+<p><strong>Syntax:</strong></p>
+<pre><code>:::note info
+:::note warn
+:::note alert</code></pre>
+<p><strong>Display:</strong></p>
+<aside class="admonition admonition-note admonition-info">
+<p>This is an information message.</p>
+</aside>
+<aside class="admonition admonition-note admonition-warn">
+<p>This is a warning message.</p>
+</aside>
+<aside class="admonition admonition-note admonition-alert">
+<p>This is a critical warning.</p>
+</aside>
+<hr />
+<h2>Footnotes</h2>
+<p><strong>Syntax:</strong></p>
+<pre><code>Text with footnote[^1]</code></pre>
+<p><strong>Display:</strong></p>
+<p>Text with footnote<strong>FOOTNOTE_1</strong></p>
+<hr />
+<h2>Escaping</h2>
+<p><strong>Syntax:</strong></p>
+<pre><code>\*asterisk\*
+\# hash</code></pre>
+<p><strong>Display:</strong></p>
+<p><strong>ESCAPE<em>0</strong>asterisk<strong>ESCAPE</em>1</strong></p>
+<p><strong>ESCAPE_0</strong> hash</p>
+<hr />
+<h2>Comments</h2>
+<p><strong>Syntax:</strong></p>
+<pre><code>Normal text
+More text</code></pre>
+<p><strong>Display:</strong></p>
+<p>Normal text</p>
+<p>More text</p>
+<hr />
+<h2>Horizontal Rule</h2>
+<p><strong>Syntax:</strong></p>
+<pre><code>---</code></pre>
+<p><strong>Display:</strong></p>
+<hr />
+<hr />
+<h2>Complete Example</h2>
+<details>
+<summary>Details example</summary>
+<p>Multiple elements work inside.</p>
+<aside class="admonition admonition-note admonition-info">
+<p>This is an admonition.</p>
+</aside>
+<pre><code>const code = &quot;example&quot;;</code></pre>
+<table><thead><tr><th>Column</th><th>Value</th></tr></thead><tbody><tr><td>A</td><td>1</td></tr></tbody></table>
+</details>
+<div class="footnotes"><ol><li id="footnote-1">Footnote content <a href="#ref-1">↩</a></li></ol></div>
+</body>
+</html>
