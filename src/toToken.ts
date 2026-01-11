@@ -1,9 +1,47 @@
 import type { Footnotes, Token } from "./types";
 
+// Constants
+const INDENT_SIZE = 2;
+
 // Tokenizer - Converts Markdown text to Token stream
 export class Tokenizer {
   private tokens: Token[] = [];
   public footnotes: Footnotes = {};
+
+  // Collect block content until closing delimiter with depth tracking
+  private collectBlockContent(
+    lines: string[],
+    startIndex: number,
+    openingPattern: RegExp,
+    closingPattern: RegExp,
+  ): { content: string; endIndex: number } {
+    let content = "";
+    let j = startIndex + 1;
+    let depth = 1;
+
+    while (j < lines.length) {
+      const currentLine = lines[j];
+
+      // Check for nested opening
+      if (currentLine.match(openingPattern)) {
+        depth++;
+      }
+
+      // Check for closing
+      if (currentLine.match(closingPattern)) {
+        depth--;
+        if (depth === 0) {
+          j++;
+          break;
+        }
+      }
+
+      content += `${currentLine}\n`;
+      j++;
+    }
+
+    return { content: content.trim(), endIndex: j };
+  }
 
   tokenize(markdown: string): Token[] {
     const lines = markdown.split("\n");
@@ -82,41 +120,21 @@ export class Tokenizer {
       const detailsMatch = line.match(/^===(.*)$/);
       if (detailsMatch !== null && detailsMatch[1]?.trim()) {
         const summary = detailsMatch[1].trim();
-        let content = "";
-        let j = i + 1;
-        let detailsDepth = 1; // Track nested details blocks
-
-        // Collect lines until closing === (accounting for nested details)
-        while (j < lines.length) {
-          const currentLine = lines[j];
-
-          // Check for nested details opening
-          if (currentLine.match(/^===.+$/)) {
-            detailsDepth++;
-          }
-
-          // Check for closing ===
-          if (currentLine.match(/^===$/) || currentLine === "===") {
-            detailsDepth--;
-            if (detailsDepth === 0) {
-              // This is our closing ===
-              j++;
-              break;
-            }
-          }
-
-          content += `${currentLine}\n`;
-          j++;
-        }
+        const { content, endIndex } = this.collectBlockContent(
+          lines,
+          i,
+          /^===.+$/,
+          /^===$|^===$/,
+        );
 
         this.tokens.push({
           type: "details",
-          content: content.trim(),
+          content,
           raw: line,
-          id: summary, // Store summary as id
+          id: summary,
         });
 
-        i = j; // Skip past the closing ===
+        i = endIndex;
         continue;
       }
 
@@ -172,7 +190,7 @@ export class Tokenizer {
         this.tokens.push({
           type: "list_item",
           ordered: false,
-          level: Math.floor(indent / 2),
+          level: Math.floor(indent / INDENT_SIZE),
           content: unorderedMatch[2],
           checked,
           raw: line,
@@ -189,7 +207,7 @@ export class Tokenizer {
         this.tokens.push({
           type: "list_item",
           ordered: true,
-          level: Math.floor(indent / 2),
+          level: Math.floor(indent / INDENT_SIZE),
           content: orderedMatch[2],
           raw: line,
         });

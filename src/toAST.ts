@@ -3,6 +3,15 @@ import type { ASTNode, Footnotes, Token } from "./types";
 // AST Generator - Converts Token stream to AST
 export class ASTGenerator {
   public footnotes: Footnotes = {};
+
+  // Process block content recursively (for admonition, details, etc.)
+  private processBlockContent(content: string): ASTNode[] {
+    const tokenizer = new (require("./toToken").Tokenizer)();
+    const innerTokens = tokenizer.tokenize(content);
+    const generator = new ASTGenerator();
+    return generator.generate(innerTokens, this.footnotes);
+  }
+
   // Build nested list structure from tokens
   private buildListTree(
     tokens: Token[],
@@ -216,16 +225,10 @@ export class ASTGenerator {
           content: this.parseInline(token.content ?? ""),
         });
       } else if (token.type === "admonition") {
-        // Process admonition block content through tokenizer and generator recursively
+        // Process admonition block content recursively
         const admonType = token.id ?? "note";
         const admonKind = token.headers?.[0] ?? "info";
-        const admonContent = token.content ?? "";
-
-        // Recursively tokenize and parse the content inside admonition
-        const tokenizer = new (require("./toToken").Tokenizer)();
-        const innerTokens = tokenizer.tokenize(admonContent);
-        const generator = new ASTGenerator();
-        const innerAST = generator.generate(innerTokens, this.footnotes);
+        const innerAST = this.processBlockContent(token.content ?? "");
 
         ast.push({
           type: "admonition",
@@ -234,15 +237,9 @@ export class ASTGenerator {
           children: innerAST,
         });
       } else if (token.type === "details") {
-        // Process details block content through tokenizer and generator recursively
+        // Process details block content recursively
         const summary = this.parseInline(token.id ?? "");
-        const detailsContent = token.content ?? "";
-
-        // Recursively tokenize and parse the content inside details
-        const tokenizer = new (require("./toToken").Tokenizer)();
-        const innerTokens = tokenizer.tokenize(detailsContent);
-        const generator = new ASTGenerator();
-        const innerAST = generator.generate(innerTokens, this.footnotes);
+        const innerAST = this.processBlockContent(token.content ?? "");
 
         ast.push({
           type: "details",

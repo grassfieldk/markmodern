@@ -74,30 +74,37 @@ export class HTMLSerializer {
   private tableToHTML(node: ASTNode): string {
     if (!node.headers || !node.rows || !node.alignments) return "";
 
-    const headerHTML = node.headers
+    const headerHTML = this.renderTableHeaders(node.headers, node.alignments);
+    const rowsHTML = this.renderTableRows(node.rows, node.alignments);
+
+    return `<table><thead><tr>${headerHTML}</tr></thead><tbody>${rowsHTML}</tbody></table>`;
+  }
+
+  private renderTableHeaders(headers: string[], alignments: string[]): string {
+    return headers
       .map((header, index) => {
-        const align = node.alignments?.[index];
+        const align = alignments[index];
         const style =
           align && align !== "left" ? ` style="text-align: ${align}"` : "";
         return `<th${style}>${header}</th>`;
       })
       .join("");
+  }
 
-    const rowsHTML = node.rows
-      .map((row) =>
-        row
+  private renderTableRows(rows: string[][], alignments: string[]): string {
+    return rows
+      .map((row) => {
+        const cells = row
           .map((cell, index) => {
-            const align = node.alignments?.[index];
+            const align = alignments[index];
             const style =
               align && align !== "left" ? ` style="text-align: ${align}"` : "";
             return `<td${style}>${cell}</td>`;
           })
-          .join(""),
-      )
-      .map((rowHTML) => `<tr>${rowHTML}</tr>`)
+          .join("");
+        return `<tr>${cells}</tr>`;
+      })
       .join("");
-
-    return `<table><thead><tr>${headerHTML}</tr></thead><tbody>${rowsHTML}</tbody></table>`;
   }
 
   private renderListItem(item: ASTNode): string {
