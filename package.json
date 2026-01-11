@@ -1,6 +1,6 @@
 {
   "name": "markmodern",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A markup language based on Markdown, designed for note-taking and article creation",
   "module": "dist/index.js",
   "main": "dist/index.js",
