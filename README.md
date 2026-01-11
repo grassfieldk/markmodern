@@ -3,38 +3,44 @@
 # Markmodern
 
 A markup language based on Markdown, designed for note-taking and article creation.
-File extension: `.mm`
+File extension: `.mm`, `.mdn`
 
 
 ## Features
 
 ### Markdown Support
 
-- Headings
+- Headings (`#` to `######`)
 - Lists
-  - Unordered lists
-  - Ordered lists
+  - Unordered lists with nesting
+  - Ordered lists with nesting
   - Task lists with checkboxes
-- Code blocks
+- Code blocks (with 3+ backticks, supports nesting)
 - Block quotes
 - Horizontal rules
-- Tables
+- Tables with alignment
 
 ### Inline Elements
 
-- Bold
-- Italic
-- Bold + Italic
-- Strikethrough
-- Inline code
-- Hyperlinks
+- Bold (`**text**`)
+- Italic (`*text*`)
+- Bold + Italic (`***text***`)
+- Strikethrough (`~~text~~`)
+- Inline code (`` `text` ``)
+- Hyperlinks (`[text](url)`)
+- Images (`![alt](url)`)
+- Captioned images (`-![caption](url)`)
 
 ### Extended Syntax
 
-- Footnotes/Annotations
-- Definition lists
-- Comments
-- Escape sequences
+- **Footnotes** - `[^1]` with definitions
+- **Definition lists** - `term : definition`
+- **Details blocks** - `===summary ... ===`
+- **Admonition blocks** - `:::note [type] ... :::`
+  - Types: `info` (blue), `warn` (orange), `alert` (red)
+- **Ruby text (Furigana)** - `{kanji}(reading)`
+- **Comments** - `// comment`
+- **Escape sequences** - `\*`, `\#`, etc.
 
 
 ## Usage
@@ -42,17 +48,20 @@ File extension: `.mm`
 ### Command Line
 
 ```bash
-# Default (HTML)
-npm run start -- <input.md>
+# Output HTML to console
+npm run start -- <input.mm>
 
-# Output as token stream
-npm run start -- <input.md> -t
+# Output HTML to file with embedded CSS
+npm run start -- <input.mm> -f
 
-# Output as AST
-npm run start -- <input.md> -a
+# Output token stream
+npm run start -- <input.mm> -t
 
-# Output as HTML
-npm run start -- <input.md> -h
+# Output AST
+npm run start -- <input.mm> -a
+
+# Output HTML fragment
+npm run start -- <input.mm> -h
 ```
 
 
@@ -60,9 +69,16 @@ npm run start -- <input.md> -h
 
 The parser uses a 3-stage pipeline:
 
-1. **Tokenization** (`Tokenizer`) - Converts Markdown text into a token stream
+1. **Tokenization** (`Tokenizer`) - Converts Markmodern text into a token stream
 2. **AST Generation** (`ASTGenerator`) - Builds an Abstract Syntax Tree with inline element parsing
 3. **Serialization** (`HTMLSerializer`) - Converts AST to HTML output
+
+### Key Design Features
+
+- Recursive block processing for complex nested structures
+- Fence-aware code block parsing with variable lengths (3+ backticks)
+- Support for nested lists with indentation
+- CSS embedding in HTML output
 
 
 ## License
