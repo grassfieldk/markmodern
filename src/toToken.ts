@@ -79,7 +79,7 @@ export class Tokenizer {
       // Check for table
       if (
         line.includes("|") &&
-        !line.startsWith("```") &&
+        !line.match(/^`{3,}/) &&
         !line.startsWith(">") &&
         !line.match(/^[\s]*[-*]\s/) &&
         !line.match(/^[\s]*(\d+)\.\s/)
@@ -105,12 +105,14 @@ export class Tokenizer {
         continue;
       }
 
-      // Code blocks: ```
-      if (line.match(/^```/)) {
+      // Code blocks: ``` or ```` or more
+      const codeFenceMatch = line.match(/^(`{3,})/);
+      if (codeFenceMatch) {
         this.tokens.push({
           type: "code_fence",
-          content: line.replace(/^```/, "").trim(),
+          content: line.replace(/^`{3,}/, "").trim(),
           raw: line,
+          level: codeFenceMatch[1].length, // Store fence length
         });
         i++;
         continue;

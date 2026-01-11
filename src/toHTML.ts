@@ -1,9 +1,45 @@
 import type { ASTNode, Footnotes } from "./types";
 
+// HTML Document options
+export interface DocumentOptions {
+  title?: string;
+  cssFile?: string;
+  lang?: string;
+}
+
 // HTML Serializer - Converts AST to HTML
 export class HTMLSerializer {
   private footnotes: Footnotes = {};
 
+  // Serialize to complete HTML document
+  serializeDocument(
+    ast: ASTNode[],
+    footnotes: Footnotes = {},
+    options: DocumentOptions = {},
+  ): string {
+    const {
+      title = "Markmodern Document",
+      cssFile = "style.css",
+      lang = "ja",
+    } = options;
+
+    const bodyContent = this.serialize(ast, footnotes);
+
+    return `<!DOCTYPE html>
+<html lang="${lang}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${this.escapeHTML(title)}</title>
+  <link rel="stylesheet" href="${cssFile}">
+</head>
+<body>
+${bodyContent}
+</body>
+</html>`;
+  }
+
+  // Serialize to HTML fragment (for console output)
   serialize(ast: ASTNode[], footnotes: Footnotes = {}): string {
     this.footnotes = footnotes;
     let html = ast.map((node) => this.nodeToHTML(node)).join("\n");

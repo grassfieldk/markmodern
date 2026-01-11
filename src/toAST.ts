@@ -155,6 +155,7 @@ export class ASTGenerator {
     let i = 0;
     let inCodeBlock = false;
     let codeContent = "";
+    let codeFenceLength = 0; // Track opening fence length
     this.footnotes = footnotes;
 
     while (i < tokens.length) {
@@ -168,12 +169,20 @@ export class ASTGenerator {
         if (!inCodeBlock) {
           inCodeBlock = true;
           codeContent = "";
+          codeFenceLength = token.level || 3; // Store opening fence length
         } else {
-          inCodeBlock = false;
-          ast.push({
-            type: "code",
-            content: codeContent.trim(),
-          });
+          // Close only if fence is same or longer length
+          const closingLength = token.level || 3;
+          if (closingLength >= codeFenceLength) {
+            inCodeBlock = false;
+            ast.push({
+              type: "code",
+              content: codeContent.trim(),
+            });
+          } else {
+            // Treat as code content
+            codeContent += `${token.raw}\n`;
+          }
         }
         i++;
         continue;
